@@ -1,0 +1,374 @@
+
+var http = http://wqs.znswsse.com/fg/api/farmApi/farm;
+
+创建猪场：/farm  post
+	 {
+	 	 farmName:猪场名称
+	 	 farmProvice:省
+	 	 farmCity: 市
+	 	 farmArea:区
+	 	 farmAddress:详细地址
+	 	 creator:创建人
+	 }
+
+获取猪场:/farm/farm-list?uid=xxx get
+
+修改猪场：/farm/update post
+		{
+		 farmId:猪场Id
+	 	 farmName:猪场名称
+	 	 farmProvice:省
+	 	 farmCity: 市
+	 	 farmArea:区
+	 	 farmAddress:详细地址
+	 	 creator:创建人
+		}
+
+删除猪场：/farm/{farmId}/remove post
+
+任命负责人 :/farm/{farmId}/leader/{leader}
+		leader :负责人id
+
+
+
+创建猪舍: /farm/house post
+		{
+			houseName,
+			typeNum:饲喂类型 1
+			layoutPoints:[{
+				px:
+				py:
+			}],
+			farmId,
+			creator,
+
+		}
+
+获取猪舍:/farm/{farmId}/house get
+
+删除猪舍：/farm/farmId/{houseId}/remove
+
+更改舍名: /farm/farmId/{houseId}/update post
+		{houseName:名称}
+
+放置猪宝:/farm/farmId/{houseId}/box-set
+		{box:猪宝号}
+
+移除猪宝: /farm/farmId/{houseId}/box-del
+
+////////////所有涉及uid的接口 只是测试需要这个参数 正式由token代替////////
+称重记录 /farm/house/record-set/{uid}
+		{
+			recordId:记录号 为0是新建 其他为追加
+			farmId,
+			weightData:称重数据
+			handleTime:时间 xxxx-xx-xx xx:xx:xx
+			currentSign:出入栏标志 0 入栏 1出栏
+
+		}
+获取记录 /farm/{farmId}/house/{sign}/record/{uid}
+ 		{sign:出入栏标志}
+
+
+入栏  /farm/house/in
+	{
+		farmId.
+		pigType:饲喂类型 1
+		inHouseInfor:{
+			houseDetailList:[{
+				houseId:舍号
+				fieldList:[1,2,3,...]栏号
+			}],
+			allQuantity:总数
+			allWeight:总重
+			handleTime:出入栏时间
+		},
+		nowPigInfor: {
+			allSick:弱数量
+			allDead: 死数量
+			nowPigList:[{
+				houseId,
+				pigQs:[{
+					fNum:栏号
+					fieldName:
+					pQs:猪个数
+				}]
+			}]
+		}
+	}
+
+ 出栏: /farm/house/out
+  	{
+  		batId:批次编号
+  		outHouseInfor:{
+ 			houseDetailList:[{
+				houseId:舍号
+				fieldList:[1,2,3,...]栏号
+			}],
+			allQuantity:总数
+			allWeight:总重
+			handleTime:出入栏时间 			
+  		}	
+  	}
+
+
+与所选舍号匹配的可出栏的舍 /farm/house/out-list
+    {
+    	farmId,
+    	houseIds:["","",],选择的舍号
+    	fdType:饲喂类型
+    }
+
+
+ 保存气体检测数据 /farm/house/gas-set
+    {
+    	farmId,
+    	houseId,
+    	dTime:时间
+    	tempre:温度
+    	humity:湿度
+    	gasO2 氧气
+    	gasNH3 氨气
+    	gasCO2 二氧化碳
+    	gasH2S 硫化氢
+    }
+
+获取气体数据 /farm/house/{houseId}/gas-info
+		{farmId: 猪场Id}
+
+获取猪舍所有气体数据 /farm/house/{houseId}/gas-infos
+		{farmId: 猪场Id}
+
+
+创建栏 /farm/field/create post
+    {
+    	houseIds:[""],舍集合
+    	farmId,
+    	htmlStr:栏位片段
+    	fieldNames:[{
+    		fieldNum,
+    		fieldName:栏位名
+    	}],
+    	creator 创建人(测试 同uid)
+    }
+
+
+ 更新名 /farm/field/update 
+ 	{
+ 	 farmId,
+ 	 houseId,
+ 	 fieldNum,
+ 	 fieldName,
+ 	}
+
+
+ 获取栏位模型 /farm/field/layout
+    {
+    	farmId,
+    	houseId
+    }
+
+绑定设备 /farm/field/bind
+   {
+   	 farmId
+   	 houseId,
+   	 fieldNum,
+   	 fieldNum2:关联的舍号
+   	 deviceNum,
+   	 bindType:绑定类型 ,0 1 2 3 4 自己上右下左
+   	 creator:创建人(测试 同uid)
+   }
+
+
+解除设备 /farm/field/unbind
+	{
+		farmId,
+		houseId,
+		fieldNum
+		deviceNum
+	}
+
+获取运行信息 /farm/field/running
+		{
+			farmId,
+			houseId,
+			feedType:饲喂类型
+		}
+
+
+猪转移 /farm/field/pig-change
+    {
+    	farmId,
+    	houseId,
+    	feedType,
+    	fieldNum,
+    	fieldNum2:转移
+    	changeType:1 转出 2弱崽 3 死滔
+    	changeCount:操作数量
+    	handler:创建人(测试 同uid)
+
+    	///////fieldNum始终是转出的那个栏位/////
+    }
+
+
+设置标定 /farm/field/food-set
+  {
+  	farmId,
+  	houseId,
+  	fieldNum,
+  	food:单次下料量
+  }
+
+
+获取栏位运行详情 /farm/farmId/field/detail
+	{
+		batchId:批次号
+		houseId,
+		fieldNum,
+		fieldNum2
+	}
+
+
+饲喂报告：暂无
+
+统计图: /farm/field/scope-food post
+		参数:{
+			device:设备号
+			inDate:入栏日期
+		}
+		
+
+饲喂查询:  /farm/field/day-food post
+		参数:{
+			device:设备号
+			time:选择的日期
+		}
+新增+++++++++++++++++
+
+1、/{farmId}/house-select?token=xxx  get 方式
+
+返回
+result:[
+    {
+     “blongBatId":"",//批次号
+       "farmId":"",
+       "hasFields":"",//舍里面是否创建了栏位
+      "houseId":"",
+      "houseType":"" //饲喂类型
+  }
+]
+
+2、/{blongBatId}/{houseId}/pigs?token=xxx  get  出栏时返回当前舍可出的栏位
+
+返回：
+result：{
+	"houseId":"",
+	"pigQs":[//当前舍可出的栏位号及其对应的数量
+	{
+	"fNum":"",
+	"pQs":"",
+	}
+
+	]
+
+}
+
+饲喂报告++++++++++++++++
+1、根据批次查询出栏信息
+farm/{farmId}/{statisId}/info?token=xxxx
+get
+farmId:猪场编号
+statisId:统计编号  批次号
+返回
+
+{
+	id:
+	batId:批次编号
+	farmId:猪场编号
+	outHouseInfor:[//要出栏的舍以及舍下的栏位
+		{
+			houseId:
+			fieldList:[]
+		}
+	],
+	fType:类型
+	fDays:天数
+	fck：料肉比
+	inDate:入栏日期
+	inAllWeight:入栏总重
+	inAllCount:入栏总数
+	inAverageWeight:入栏均重
+	outDate:出栏日期
+	outAllWeight:出栏总重
+	outAllCount:出栏总数
+	outAverageWeight:出栏均重
+	outRate:出栏率
+	currentFood：耗料量
+	sickPigs：弱崽数
+	sickRate:弱崽率
+	deadPig:死淘数
+	deadRate:死淘率
+	isOver:是否完结
+
+}
+2、批次时间轴
+farm/{farmId}/{houseId}/brief?token=xxx
+get
+farmId:猪场编号
+houseId: 猪舍编号
+
+ 返回
+ {
+	farmId:猪场编号
+	batId:批次编号
+	isIn:是否入栏
+	isAllOut：是否全部出栏
+	inHouseInfo:{ //入栏简要信息
+		count:总数
+		weight:总重
+		time:时间
+	},
+	outHouseBaseInfos: //每次出栏的简要信息
+		[
+			{
+				count:总数
+				weight:总重
+				time:时间
+				statisId:统计编号
+			}
+		],
+	outHouseInfo:{ // 最后总体统计的简要信息 这个字段内容暂时返回为默认0
+			count:总数
+			weight:总重
+			time:时间
+			statisId:统计编号
+	 }
+ }
+调水
+
+
+常压：/{farmId}/house/{houseId}/water-common?token=xxx    get方式、
+返回;
+result:{
+	water:xx;   20、30、40、50、60  //分别对应于1档到5档
+}
+低压：/{farmId}/house/{houseId}/water-low?token=xxx    get方式、
+返回;
+result:{
+	water:xx;   120、130、140、150、160  //分别对应于1档到5档
+}
+调节水压：
+常压：/house/water-common?token=xxx   post
+参数：{
+	farmId:xxx,
+	houseId:xxx,
+	waterCount:xxx   //水量:20-60
+}
+低压：/house/water-low?token=xxx   post
+参数：{
+	farmId:xxx,
+	houseId:xxx,
+	waterCount:xxx   //120-160
+}
+
+

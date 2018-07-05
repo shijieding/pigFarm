@@ -1,0 +1,97 @@
+1、添加角色和权限
+	farm/user-access/role/add  post
+farmId:""
+roleName:"",
+reads:"",
+writes:"",
+
+2、修改角色权限
+	farm//user-access/role/update post
+farmId:"",
+roleId:0,
+reads:"",
+writes:"",
+
+3、获取角色权限
+	farm/user-access/{farmId}/{roleId}
+返回
+[
+		{
+			houseId:"",
+			houseRead:true/false, 是否选择
+			houseWrite:true/false, 是否选择
+			canChange:true/false 是否可以修改(不显示)
+		}
+		]
+
+4、获取用户权限
+	farm/user-access/{farmId}
+
+返回
+{
+	user_role:0,
+	houseAccessList:[
+		{
+			houseId:"",
+			houseRead:true/false, 是否选择
+			houseWrite:true/false, 是否选择
+			canChange:true/false 是否可以修改
+		}
+		],
+	expire_date:"",过期时间
+	outExpire:true/false 是否过期
+}
+
+5、修改用户权限
+	farm/user-access/update
+farmId:"",
+reads:"",
+writes:"",
+roleId:0
+
+6、添加用户权限
+	farm/user-access
+farm:"",
+reads:"",
+writes:"",
+role:0
+
+7、获取角色列表
+	farm/{farmId}/role-list get
+
+返回:
+[{
+	role_id:0,
+	role_name:""
+}]
+
+
+8、获取申请消息列表
+farm/{farmId}/message/applies?token=xxxx
+get
+
+return 
+[
+	{
+		msgId 消息编号
+		name 申请人姓名
+		content 申请的猪场名
+		phone 手机号码
+		fTime 申请时间
+		cTime 审核时间
+		cResult 审核状态(0未审核 1 已通过 2 已完成 3 已拒绝 4 已过期)
+	}
+]
+
+9、设置同意
+	farm/message/pass?token=xxxx
+	post
+参数 {
+	msgId 消息的编号
+}
+10、设置拒绝
+	farm/message/reject?token=xxxx
+	post
+参数 {
+	msgId 消息的编号
+}
